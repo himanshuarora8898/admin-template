@@ -1,15 +1,45 @@
+<?php require 'sqlconfig.php';?>
+<?php
+session_start();
+if (isset($_POST['submit'])) {
+    $name=isset($_POST['name'])?$_POST['name']:'';
+    $price=isset($_POST['price'])?$_POST['price']:'';
+    $image= $_FILES['image']['name'];
+    $category=isset($_POST['dropdown'])?$_POST['dropdown']:'';
+    $tags=isset($_POST['array'])?$_POST['array']:'';
+    $discription=isset($_POST['field'])?$_POST['field']:'';
+    $tag=serialize($tags);
+    
+    // $sql="INSERT INTO `products` ( `category_id`, `name`, `price`, `image`, `tags`, `discription`)
+    //  VALUES ( '$check2', '$name', '$price', '$image', '$', 'very goog...!')";
+    $sql="INSERT INTO `products` (`category_id`, `name`, `price`, `image`, `tags`, `discription`) 
+    VALUES ( '$category', '$name', '$price', '$image', '$tag', '$discription');";
 
-    <?php require 'header.php';?>
-        <?php include 'sidebar.php';?>
-            <div id="main-content"> <!-- Main Content Section with everything -->
+    if ($conn->query($sql)===true) {
+        echo "New record created successfully";
+        header("Location: index.php");
+    }
+    else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        header("Location: error.php");
+    }
+        $conn->close();
+}
+
+?>
+	<?php include 'header.php';?>
+		<?php include 'sidebar.php';?>			
+			
+			<div id="main-content"> <!-- Main Content Section with everything -->
+			
 			<noscript> <!-- Show a notification if the user has disabled javascript -->
 				<div class="notification error png_bg">
 					<div>
-                        Javascript is disabled or is not supported by your browser. Please <a href="http://browsehappy.com/" title="Upgrade to a better browser">upgrade</a> your browser or <a href="http://www.google.com/support/bin/answer.py?answer=23852" title="Enable Javascript in your browser">enable</a> Javascript to navigate the interface properly.
-                    </div>
-                </div>
-            </noscript>
-
+						Javascript is disabled or is not supported by your browser. Please <a href="http://browsehappy.com/" title="Upgrade to a better browser">upgrade</a> your browser or <a href="http://www.google.com/support/bin/answer.py?answer=23852" title="Enable Javascript in your browser">enable</a> Javascript to navigate the interface properly.
+					</div>
+				</div>
+			</noscript>
+			
 			<!-- Page Head -->
 			<h2>Welcome John</h2>
 			<p id="page-intro">What would you like to do?</p>
@@ -24,8 +54,8 @@
 					<h3>Content box</h3>
 					
 					<ul class="content-box-tabs">
-						<li><a href="#tab1" class="default-tab">Manage</a></li> <!-- href must be unique and match the id of target div -->
-						<li><a href="#tab2">Add</a></li>
+						<li><a href="#tab1" >Manage</a></li> <!-- href must be unique and match the id of target div -->
+						<li><a href="#tab2" class="default-tab">Add</a></li>
 					</ul>
 					
 					<div class="clear"></div>
@@ -34,7 +64,7 @@
 				
 				<div class="content-box-content">
 					
-					<div class="tab-content default-tab" id="tab1"> <!-- This is the target div. id must match the href of this div's tab -->
+					<div  class="tab-content" id="tab1"> <!-- This is the target div. id must match the href of this div's tab -->
 						
 						<div class="notification attention png_bg">
 							<a href="#" class="close"><img src="resources/images/icons/cross_grey_small.png" title="Close this notification" alt="close" /></a>
@@ -200,56 +230,54 @@
 						
 					</div> <!-- End #tab1 -->
 					
-					<div class="tab-content" id="tab2">
+					<div  class="tab-content default-tab" id="tab2">
 					
-						<form action="#" method="post">
+						<form action="add.php" method="post">
 							
 							<fieldset> <!-- Set class to "column-left" or "column-right" on fieldsets to divide the form into columns -->
 								
 								<p>
-									<label>Small form input</label>
-										<input class="text-input small-input" type="text" id="small-input" name="small-input" /> <span class="input-notification success png_bg">Successful message</span> <!-- Classes for input-notification: success, error, information, attention -->
-										<br /><small>A small description of the field</small>
+									<label>Name</label>
+										<input class="text-input medium-input" type="text" id="medium-input" name="name" />  <!-- Classes for input-notification: success, error, information, attention -->
+										<!-- <br /><small>A small description of the field</small> -->
 								</p>
 								
 								<p>
-									<label>Medium form input</label>
-									<input class="text-input medium-input datepicker" type="text" id="medium-input" name="medium-input" /> <span class="input-notification error png_bg">Error message</span>
+									<label>Price</label>
+									<input class="text-input small-input datepicker" type="text" id="small-input" name="price" /> 
 								</p>
 								
 								<p>
-									<label>Large form input</label>
-									<input class="text-input large-input" type="text" id="large-input" name="large-input" />
+									<label>Image</label>
+                                    <input type="file" id="img" name="image" accept="image/*">
 								</p>
 								
 								<p>
-									<label>Checkboxes</label>
-									<input type="checkbox" name="checkbox1" /> This is a checkbox <input type="checkbox" name="checkbox2" /> And this is another checkbox
-								</p>
-								
-								<p>
-									<label>Radio buttons</label>
-									<input type="radio" name="radio1" /> This is a radio button<br />
-									<input type="radio" name="radio2" /> This is another radio button
-								</p>
-								
-								<p>
-									<label>This is a drop down list</label>              
+									<label>Categories</label>              
 									<select name="dropdown" class="small-input">
-										<option value="option1">Option 1</option>
-										<option value="option2">Option 2</option>
-										<option value="option3">Option 3</option>
-										<option value="option4">Option 4</option>
-									</select> 
+		                                <option value="men">Men</option>
+		                                <option value="women">Women</option>
+		                                <option value="kids">Kids</option>
+		                                <option value="Electronics">Electronics</option>
+                                        <option value="sports">Sports</option>
+                                    </select>
+								</p>
+								<p>
+	                                <label>Tags</label>
+	                                    <input type="checkbox" name="array[]" value="fashion" /> Fashion 
+	                                    <input type="checkbox" name="array[]" value="ecommerce" /> Ecommerce
+	                                    <input type="checkbox" value="shop" name="array[]"/> Shop
+                                        <input type="checkbox" value="handbag"name="array[]" /> Hand Bag
+                                        <input type="checkbox" value="laptop" name="array[]"/> Laptop
+                                        <input type="checkbox" value="headphone" name="array[]"/> Headphone
+                                </p>
+								<p>
+									<label>Discription</label>
+									<textarea class="text-input textarea wysiwyg" id="textarea" name="field" cols="79" rows="15"></textarea>
 								</p>
 								
 								<p>
-									<label>Textarea with WYSIWYG</label>
-									<textarea class="text-input textarea wysiwyg" id="textarea" name="textfield" cols="79" rows="15"></textarea>
-								</p>
-								
-								<p>
-									<input class="button" type="submit" value="Submit" />
+									<input class="button" type="submit" name="submit" value="Submit" />
 								</p>
 								
 							</fieldset>
