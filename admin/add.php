@@ -1,28 +1,24 @@
 <?php require 'sqlconfig.php';?>
 <?php
-session_start();
 if (isset($_POST['submit'])) {
     $name=isset($_POST['name'])?$_POST['name']:'';
     $price=isset($_POST['price'])?$_POST['price']:'';
     $image= $_FILES['image']['name'];
     $category=isset($_POST['dropdown'])?$_POST['dropdown']:'';
+    $color=isset($_POST['colordropdown'])?$_POST['colordropdown']:'';
     $tags=isset($_POST['array'])?$_POST['array']:'';
     $discription=isset($_POST['field'])?$_POST['field']:'';
     $tag=serialize($tags);
-    
-    // $sql="INSERT INTO `products` ( `category_id`, `name`, `price`, `image`, `tags`, `discription`)
-    //  VALUES ( '$check2', '$name', '$price', '$image', '$', 'very goog...!')";
-    $sql="INSERT INTO `products` (`category_id`, `name`, `price`, `image`, `tags`, `discription`) 
-    VALUES ( '$category', '$name', '$price', '$image', '$tag', '$discription');";
+    echo $color;
+    $sql="INSERT INTO `products` (`category_id`, `color`,`name`, `price`, `image`, `tags`, `discription`) 
+    VALUES ( '$category','$color' ,'$name', '$price', '$image', '$tag', '$discription');";
 
     if ($conn->query($sql)===true) {
         echo "New record created successfully";
         header("Location: index.php");
     }
-    else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-        header("Location: error.php");
-    }
+   
+       
         $conn->close();
 }
 
@@ -39,7 +35,7 @@ if (isset($_POST['submit'])) {
 					</div>
 				</div>
 			</noscript>
-			
+			<div id="print"></div>
 			<!-- Page Head -->
 			<h2>Welcome John</h2>
 			<p id="page-intro">What would you like to do?</p>
@@ -48,7 +44,7 @@ if (isset($_POST['submit'])) {
 			<div class="clear"></div> <!-- End .clear -->
 			
 			<div class="content-box"><!-- Start Content Box -->
-				
+			
 				<div class="content-box-header">
 					
 					<h3>Content box</h3>
@@ -260,6 +256,23 @@ if (isset($_POST['submit'])) {
 		                                <option value="kids">Kids</option>
 		                                <option value="Electronics">Electronics</option>
                                         <option value="sports">Sports</option>
+                                    </select>
+                                </p>
+                                <p>
+									<label>Color</label>              
+									<select name="colordropdown" class="small-input">
+		                                <option value="green">Green</option>
+		                                <option value="yellow">Yellow</option>
+		                                <option value="pink">Pink</option>
+		                                <option value="violet">Violet</option>
+                                        <option value="blue">Blue</option>
+                                        <option value="orange">Orange</option>
+                                        <option value="grey">Grey</option>
+                                        <option value="black">Black</option>
+                                        <option value="white">White</option>
+                                        <option value="cyan">Cyan</option>
+                                        <option value="lightcyan">LightCyan</option>
+                                        <option value="magenta">Magenta</option>
                                     </select>
 								</p>
 								<p>

@@ -104,7 +104,7 @@
                   <li><a href="account.html">My Account</a></li>
                   <li class="hidden-xs"><a href="wishlist.html">Wishlist</a></li>
                   <li class="hidden-xs"><a href="cart.html">My Cart</a></li>
-                  <li class="hidden-xs"><a href="checkout.html">Checkout</a></li>
+                  <li class="hidden-xs"><a href="checkout.php">Checkout</a></li>
                   <li><a href="" data-toggle="modal" data-target="#login-modal">Login</a></li>
                 </ul>
               </div>
@@ -348,8 +348,10 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th></th>
-                        <th></th>
+            
+                        <th>Delete</th>
+                        <th>Add</th>
+                        <th>Image</th>
                         <th>Product</th>
                         <th>Price</th>
                         <th>Quantity</th>
@@ -357,30 +359,33 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
-                        <td><a href="#"><img src="img/man/polo-shirt-1.png" alt="img"></a></td>
-                        <td><a class="aa-cart-title" href="#">Polo T-Shirt</a></td>
-                        <td>$250</td>
-                        <td><input class="aa-cart-quantity" type="number" value="1"></td>
-                        <td>$250</td>
-                      </tr>
-                      <tr>
-                        <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
-                        <td><a href="#"><img src="img/man/polo-shirt-2.png" alt="img"></a></td>
-                        <td><a class="aa-cart-title" href="#">Polo T-Shirt</a></td>
-                        <td>$150</td>
-                        <td><input class="aa-cart-quantity" type="number" value="1"></td>
-                        <td>$150</td>
-                      </tr>
-                      <tr>
-                        <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
-                        <td><a href="#"><img src="img/man/polo-shirt-3.png" alt="img"></a></td>
-                        <td><a class="aa-cart-title" href="#">Polo T-Shirt</a></td>
-                        <td>$50</td>
-                        <td><input class="aa-cart-quantity" type="number" value="1"></td>
-                        <td>$50</td>
-                      </tr>
+                    <?php 
+                    require 'sqlconfig.php';
+
+                    ?>
+                    <?php 
+
+                    $sql="SELECT * from cart ";
+
+                    $result=$conn->query($sql);
+                    if ($result->num_rows > 0) {
+                        while ($data= $result->fetch_assoc()) {
+
+                            $cartd='<tr>
+                            <td><a class="remove" href="cartdel.php?id='.$data['id'].'><fa class="fa fa-close"></fa>X</a></td>
+                            <td><a href=cartupdate.php?id='.$data['id'].'>+</a></td>
+                            <td><a href="#"><img src="'.$data['image'].'" alt="img"></a></td>
+                            <td>'.$data['product'].'</td>
+                            <td>$'.$data['price'].'</td>
+                            <td><input class="aa-cart-quantity" type="number" value="'.$data['quantity'].'"></td>
+                            <td>$'.$data['totalprice'].'</td>
+                            </tr>';
+                            echo $cartd;   
+                        }
+                    }
+                      
+
+                    ?>
                       <tr>
                         <td colspan="6" class="aa-cart-view-bottom">
                           <div class="aa-cart-coupon">
@@ -396,20 +401,31 @@
              </form>
              <!-- Cart Total view -->
              <div class="cart-view-total">
-               <h4>Cart Totals</h4>
+               <h4>Cart Total</h4>
                <table class="aa-totals-table">
                  <tbody>
                    <tr>
                      <th>Subtotal</th>
-                     <td>$450</td>
+                     <td>$<?php 
+                        $total=0;
+                        require "sqlconfig.php";
+                        $sql1="SELECT * from cart ";
+                        $result=$conn->query($sql1);
+                        if ($result->num_rows > 0) {
+                            while ($row= $result->fetch_assoc()) {
+                                $total=$total+$row['totalprice'];
+                        
+                            }
+                        }
+                        echo $total;
+
+                     
+                        ?></td>
                    </tr>
-                   <tr>
-                     <th>Total</th>
-                     <td>$450</td>
-                   </tr>
+                  
                  </tbody>
                </table>
-               <a href="#" class="aa-cart-view-btn">Proced to Checkout</a>
+               <a href="checkout.php" class="aa-cart-view-btn">Proced to Checkout</a>
              </div>
            </div>
          </div>

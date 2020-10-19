@@ -607,23 +607,44 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>T-Shirt <strong> x  1</strong></td>
-                          <td>$150</td>
-                        </tr>
-                        <tr>
-                          <td>Polo T-Shirt <strong> x  1</strong></td>
-                          <td>$250</td>
-                        </tr>
-                        <tr>
-                          <td>Shoes <strong> x  1</strong></td>
-                          <td>$350</td>
-                        </tr>
+                        <?php 
+                        require 'sqlconfig.php';
+
+                        ?>
+                        <?php
+                        $total=0; 
+                        $sql="SELECT * from cart ";
+                        $result=$conn->query($sql);
+                        if ($result->num_rows > 0) {
+                            while ($data= $result->fetch_assoc()) {
+                                $cartd='<tr>                          
+                                <td>'.$data['product'].' X '.$data['quantity'].'</td>
+                                
+                                <td>$'.$data['totalprice'].'</td>
+                                </tr>';
+                                echo $cartd;   
+                            }
+                        }
+                    ?>
                       </tbody>
                       <tfoot>
                         <tr>
                           <th>Subtotal</th>
-                          <td>$750</td>
+                          <td>$<?php 
+                            $total=0;
+                            require "sqlconfig.php";
+                            $sql1="SELECT * from cart ";
+                            $result=$conn->query($sql1);
+                            if ($result->num_rows > 0) {
+                                while ($row= $result->fetch_assoc()) {
+                                    $total=$total+$row['totalprice'];
+                            
+                                }
+                            }
+                            echo $total;
+
+                     
+                        ?></td>
                         </tr>
                          <tr>
                           <th>Tax</th>
@@ -631,7 +652,21 @@
                         </tr>
                          <tr>
                           <th>Total</th>
-                          <td>$785</td>
+                          <td>$<?php 
+                            $total=35;
+                            require "sqlconfig.php";
+                            $sql1="SELECT * from cart ";
+                            $result=$conn->query($sql1);
+                            if ($result->num_rows > 0) {
+                                while ($row= $result->fetch_assoc()) {
+                                    $total=$total+$row['totalprice'];
+                            
+                                }
+                            }
+                            echo $total;
+
+                     
+                        ?></td>
                         </tr>
                       </tfoot>
                     </table>
